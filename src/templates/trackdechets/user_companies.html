@@ -1,0 +1,28 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+    <h1>Companies from {{ user.name }} - {{ user.email }}</h1>
+    <p><a href="{% url 'admin:trackdechets_user_changelist' %}">← Users</a></p>
+
+
+    <table>
+        <thead>
+        <tr>
+            <th>Role</th>
+            <th>Siret</th>
+            <th>Name</th>
+            <th>Given Name</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for association in associations %}
+            <tr>
+                <td>{{ association.role }}</td>
+                <td>{{ association.companyid.siret }}</td>
+                <td>{{ association.companyid.name }}</td>
+                <td>{{ association.companyid.givenname }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
