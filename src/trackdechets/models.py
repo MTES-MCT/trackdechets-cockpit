@@ -5,6 +5,7 @@
 #   * Make sure each ForeignKey and OneToOneField has `on_delete` set to the desired behavior
 #   * Remove `managed = False` lines if you wish to allow Django to create, modify, and delete the table
 # Feel free to rename the models, but don't rename db_table values or field names.
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -200,6 +201,8 @@ class Brokerreceipt(models.Model):
 #         db_table = 'Bsda'
 #
 #
+
+
 class Bsdasri(models.Model):
     id = models.TextField(primary_key=True)
     status = models.TextField()  # This field type is a guess.
@@ -447,12 +450,17 @@ class Bsdasri(models.Model):
     ecoorganismesiret = models.TextField(
         db_column="ecoOrganismeSiret", blank=True, null=True
     )  # Field name made lowercase.
-    transportertransportplates = models.TextField(
-        db_column="transporterTransportPlates", blank=True, null=True
-    )  # Field name made lowercase. This field type is a guess.
-    identificationnumbers = models.TextField(
-        db_column="identificationNumbers", blank=True, null=True
-    )  # Field name made lowercase. This field type is a guess.
+
+    transportertransportplates = ArrayField(
+        models.TextField(),
+        db_column="transporterTransportPlates",
+        blank=True,
+        null=True,
+    )  # Field name made lowercase. Manually edited.
+
+    identificationnumbers = ArrayField(
+        models.TextField(), db_column="identificationNumbers", blank=True, null=True
+    )  # Field name made lowercase. Manually edited.
 
     class Meta:
         managed = False

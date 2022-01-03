@@ -3,7 +3,13 @@ from django.template.response import TemplateResponse
 from django.urls import path, reverse
 from django.utils.html import format_html
 
-from .forms import AnonymousCompanyForm, ApplicationForm
+from .forms import (
+    AnonymousCompanyForm,
+    ApplicationForm,
+    BsdasriForm,
+    CompanyForm,
+    UserForm,
+)
 from .models import (
     Anonymouscompany,
     Application,
@@ -16,7 +22,12 @@ from .models import (
 
 @admin.register(Anonymouscompany)
 class AnonymouscompanyAdmin(admin.ModelAdmin):
-    list_display = ["id", "siret", "name"]
+    list_display = [
+        "siret",
+        "name",
+        "id",
+    ]
+    search_fields = ["siret", "name"]
     form = AnonymousCompanyForm
 
 
@@ -32,14 +43,13 @@ class CompanyAdmin(admin.ModelAdmin):
         "siret",
         "name",
         "verificationstatus",
+        "verificationmode",
         "createdat",
         "id",
         "view_members",
     ]
-    search_fields = ["siret", "name"]
-    readonly_fields = [
-        "id",
-    ]
+    form = CompanyForm
+    search_fields = ["siret", "name", "id"]
     list_filter = ["verificationstatus", "createdat"]
 
     def view_members(self, obj):
@@ -75,16 +85,18 @@ class CompanyAdmin(admin.ModelAdmin):
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_filter = ["isactive", "createdat", "activatedat"]
-    search_fields = ["email", "name"]
+    search_fields = ["email", "name", "id"]
     list_display = [
         "email",
         "name",
         "isactive",
         "createdat",
         "isadmin",
+        "id",
         "view_companies",
     ]
     readonly_fields = ["id", "isadmin", "password"]
+    form = UserForm
 
     def view_companies(self, obj):
         url = reverse("admin:user_companies", args=[obj.pk])
@@ -135,3 +147,5 @@ class BsdasriAdmin(admin.ModelAdmin):
         "destinationcompanysiret",
         "type",
     ]
+    form = BsdasriForm
+    raw_id_fields = ("emissionsignatoryid", "groupedinid")
